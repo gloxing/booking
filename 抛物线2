@@ -1,0 +1,87 @@
+<template>
+    <div>
+        <div v-for='(item,ballIndex) in balls' :key='ballIndex'>
+            <div class="ball-wrap" :style='item.style' v-if='item.isShow'>
+                <!--   <div class="ball"></div> -->
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+export default {
+    data() {
+        return {
+            balls: [{ isShow: false, style: '' }, { isShow: false, style: '' }, { isShow: false, style: '' }, { isShow: false, style: '' }, { isShow: false, style: '' },{ isShow: false, style: '' },],
+        }
+    },
+    methods: {
+        execute(e) {
+            const hitObj = this.balls.find(item => {
+                return !item.isShow
+            });
+            //点击位置
+            const clickX = e.touches[0].clientX - 10;
+            const clickY = e.touches[0].clientY - 10;
+
+            //购物车位置
+            const carticonLeft = this.$parent.$parent.carticonLeft+30;
+            const carticonTop = this.$parent.$parent.carticonTop+20;
+
+            //起始位置 偏移量
+            hitObj.style = 'top:' + clickY + 'px;' + 'left:' + clickX + 'px;';
+            // const translateX = '-' + (clickX - carticonLeft) + 'px';
+            hitObj.isShow = true;
+            this.$nextTick(() => {
+                hitObj.style =  'top:' + carticonTop + 'px;' + 'left:' + carticonLeft + 'px;';
+                setTimeout(() => {
+                    hitObj.isShow = false;
+                }, 500);
+            })
+        }
+    }
+}
+</script>
+<style scoped>
+.ball-wrap {
+    position: fixed;
+    /*    animation: vertical-animation 0.5s ease-in 0s 1;
+    animation-fill-mode: forwards;*/
+
+    width: 30rpx;
+    height: 30rpx;
+    border-radius: 50%;
+    background: #fd4373;
+    transition: top 0.5s cubic-bezier(0.44,-0.53,0.88,0.66) 0s,
+        left 0.5s linear 0s;
+}
+
+.ball-wrap .ball {
+    width: 30rpx;
+    height: 30rpx;
+    border-radius: 50%;
+    position: fixed;
+    background: #fd4373;
+    animation: horizion-animation 0.5s linear 0s 1;
+    animation-fill-mode: forwards;
+}
+
+@keyframes horizion-animation {
+    0% {
+        transform: translateX(0px);
+    }
+
+    100% {
+        transform: translateX(-330px);
+    }
+}
+
+@keyframes vertical-animation {
+    0% {
+        transform: translateY(0px);
+    }
+
+    100% {
+        transform: translateY(450px);
+    }
+}
+</style>
